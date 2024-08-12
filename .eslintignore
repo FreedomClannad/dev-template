@@ -1,0 +1,16 @@
+*.sh
+node_modules
+*.md
+*.woff
+*.ttf
+.vscode
+.idea
+dist
+plugs
+static
+/docs
+.husky
+.local
+/bin
+.prettierrc.json
+.eslintrc.config.js
