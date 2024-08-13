@@ -38,6 +38,9 @@ importers:
 
   example:
     dependencies:
+      am-ketcher:
+        specifier: workspace:^
+        version: link:../packages/Ketcher
       react:
         specifier: ^18.3.1
         version: 18.3.1
