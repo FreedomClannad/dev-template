@@ -13,4 +13,4 @@ static
 .local
 /bin
 .prettierrc.json
-.eslintrc.config.js
+.eslintrc.config.mjs
