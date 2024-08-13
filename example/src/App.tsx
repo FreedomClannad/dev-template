@@ -1,13 +1,13 @@
 // import { useState } from "react";
 import "./App.css";
-import { Button } from "am-ketcher";
+import { MolSVG } from "am-ketcher";
 
 function App() {
 	// const [count, setCount] = useState(0);
 
 	return (
 		<>
-			<Button></Button>
+			<MolSVG mol="cccccc"></MolSVG>
 		</>
 	);
 }

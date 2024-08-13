@@ -19,6 +19,9 @@
 		"vite-plugin-eslint": "^1.8.1"
 	},
 	"dependencies": {
+		"@ant-design/icons": "^5.4.0",
+		"ketcher-core": "^2.21.0",
+		"rc-image": "^7.10.0",
 		"react": "^18.3.1",
 		"react-dom": "^18.3.1"
 	}

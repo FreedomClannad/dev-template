@@ -1,0 +1,47 @@
+.am-molecule-svg {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	background-color: #ffffff;
+	position: relative;
+}
+
+.am-molecule-loading {
+	height: 100%;
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	color: #1677ff;
+	position: absolute;
+	z-index: 0;
+}
+
+.am-molecule-zoom {
+	position: absolute;
+	top: 2%;
+	right: 2%;
+	line-height: 18px;
+	border-radius: 4px;
+	z-index: 1;
+}
+.am-molecule-zoom:hover i {
+	color: #1677ff;
+}
+.am-molecule-zoom i {
+	font-size: 18px !important;
+	color: #333;
+	transition: color ease 500ms;
+}
+
+.molecular-svg {
+	border-radius: 4px;
+}
+.molecular-svg svg {
+	transform: scale(1.3) translateX(0px);
+}
+
+.am-molecule-preview img {
+	border-radius: 4px;
+}
