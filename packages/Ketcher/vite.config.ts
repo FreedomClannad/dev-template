@@ -1,40 +1,28 @@
-import { defineConfig, ConfigEnv, UserConfig, loadEnv, PluginOption } from "vite";
+import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react-swc";
-import * as process from "process";
-// 这里vite-plugin-eslint 报错 请看 https://github.com/gxmari007/vite-plugin-eslint/issues/74 解决方法
-// @ts-ignore
-import eslintPlugin from "vite-plugin-eslint";
 import { resolve } from "path";
-
-// https://cn.vitejs.dev/config/
-export default defineConfig((mode: ConfigEnv): UserConfig => {
-	const define = {
-		"process.env": process.env
-	};
-	if (mode.mode === "development") {
-		// @ts-ignore
-		define.global = {};
+import dts from "vite-plugin-dts";
+// https://vitejs.dev/config/
+export default defineConfig({
+	plugins: [react(), dts({ include: ["lib"], tsconfigPath: "./tsconfig.build.json" })],
+	build: {
+		copyPublicDir: false,
+		lib: {
+			// Could also be a dictionary or array of multiple entry points
+			entry: resolve(__dirname, "lib/main.ts"),
+			formats: ["es"]
+			// the proper extensions will be added
+			// fileName: "my-lib"
+		},
+		rollupOptions: {
+			// 确保外部化处理那些你不想打包进库的依赖
+			external: ["react", "react/jsx-runtime"]
+			// output: {
+			// 	// 在 UMD 构建模式下为这些外部化的依赖提供一个全局变量
+			// 	globals: {
+			// 		vue: "Vue"
+			// 	}
+			// }
+		}
 	}
-	return {
-		root: "dev",
-		define: define,
-		resolve: {
-			// extensions: [".jsx"],
-			alias: {
-				"@": resolve(__dirname, "./src")
-			}
-		},
-		server: {
-			host: "0.0.0.0", // 服务器主机名，如果允许外部访问，可设置为"0.0.0.0"
-			port: 3388,
-			open: true,
-			cors: true,
-			proxy: {}
-		},
-		plugins: [
-			react(),
-			// * EsLint 报错信息显示在浏览器界面上
-			eslintPlugin(),
-		],
-	};
 });
