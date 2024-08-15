@@ -1,26 +1,28 @@
-import reactLogo from "./assets/react.svg";
-import viteLogo from "/vite.svg";
 import "./App.css";
-import { Button } from "../lib/main";
+import { MolSVG } from "../lib/main";
 function App() {
+	const mol = `Benzene
+  Ketcher  8152413342D 1   1.00000     0.00000     0
+
+  6  6  0  0  0  0  0  0  0  0999 V2000
+    7.3848   -1.7751    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    9.1152   -1.7746    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    8.2516   -1.2750    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    9.1152   -2.7755    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    7.3848   -2.7800    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+    8.2538   -3.2750    0.0000 C   0  0  0  0  0  0  0  0  0  0  0  0
+  3  1  2  0     0  0
+  1  5  1  0     0  0
+  5  6  2  0     0  0
+  6  4  1  0     0  0
+  4  2  2  0     0  0
+  2  3  1  0     0  0
+M  END`;
 	return (
 		<>
 			<div>
-				<a href="https://vitejs.dev" target="_blank">
-					<img src={viteLogo} className="logo" alt="Vite logo" />
-				</a>
-				<a href="https://react.dev" target="_blank">
-					<img src={reactLogo} className="logo react" alt="React logo" />
-				</a>
+				<MolSVG mol={mol}></MolSVG>
 			</div>
-			<h1>Vite + React</h1>
-			<div className="card">
-				<Button></Button>
-				<p>
-					Edit <code>src/App.tsx</code> and save to test HMR
-				</p>
-			</div>
-			<p className="read-the-docs">Click on the Vite and React logos to learn more</p>
 		</>
 	);
 }

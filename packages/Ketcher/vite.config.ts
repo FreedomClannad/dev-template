@@ -4,12 +4,17 @@ import { resolve } from "path";
 import dts from "vite-plugin-dts";
 // https://vitejs.dev/config/
 export default defineConfig({
+	define: {
+		"process.env": process.env,
+		global: {}
+	},
 	plugins: [react(), dts({ include: ["lib"], tsconfigPath: "./tsconfig.build.json" })],
 	build: {
 		copyPublicDir: false,
 		lib: {
 			// Could also be a dictionary or array of multiple entry points
 			entry: resolve(__dirname, "lib/main.ts"),
+			fileName: "index",
 			formats: ["es"]
 			// the proper extensions will be added
 			// fileName: "my-lib"
