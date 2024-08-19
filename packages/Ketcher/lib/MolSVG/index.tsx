@@ -4,7 +4,18 @@ import { HighlightMol, RenderStruct } from "./renderStruct";
 import { v4 as uuid4 } from "uuid";
 import Spinner from "../Loading/Spinner";
 import "./styles.css";
-
+// 编写JSDoc
+/**
+ * @description 生成SVG图片
+ * @typedef {Object} MolSVGProps
+ * @param {string} [mol] - molecule string
+ * @param {CSSProperties} [style] - style
+ * @param {string} [rootClass] - root class
+ * @param {string} [boxClass] - box class
+ * @param {string} [id] - id
+ * @param {number} [width] - width
+ * @param {number} [height] - height
+ * */
 export type Props = {
 	mol: string;
 	style?: CSSProperties;
@@ -23,6 +34,13 @@ const Error = () => {
 	return <div className="error-container">Error</div>;
 };
 
+// 编写JSDoc
+/**
+ * @component
+ * @description 生成SVG图片
+ * @param {MolSVGProps} props - Props
+ * @returns {ReactNode} SVG图片
+ * */
 const MolSVG = memo((props: Props) => {
 	const {
 		mol,
