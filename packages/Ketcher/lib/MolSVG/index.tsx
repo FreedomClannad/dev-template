@@ -2,6 +2,7 @@ import { MolSerializer, LogSettings } from "ketcher-core";
 import { useEffect, useRef, memo, ReactNode, useState, CSSProperties } from "react";
 import { HighlightMol, RenderStruct } from "./renderStruct";
 import { v4 as uuid4 } from "uuid";
+import Spinner from "../Loading/Spinner";
 import "./styles.css";
 
 export type Props = {
@@ -38,6 +39,7 @@ const MolSVG = memo((props: Props) => {
 	const moleculeRef = useRef<HTMLDivElement>(null);
 
 	const [errorState, setErrorState] = useState<boolean>(false);
+	const [loading, setLoading] = useState<boolean>(false);
 
 	useEffect(() => {
 		// 新版加了日志, 源码是调用window上属性，为了防止和Kethcer的Editer的Window冲突，所以这里针对window的ketcher进行判断
@@ -56,7 +58,12 @@ const MolSVG = memo((props: Props) => {
 	const renderSVG = () => {
 		if (moleculeRef && moleculeRef.current && mol) {
 			const clientArea = moleculeRef.current;
-			clientArea.innerHTML = "";
+			const svgElementList = clientArea.querySelectorAll("svg");
+			const svgList = Array.from(svgElementList);
+			svgList.map(el => {
+				clientArea.removeChild(el);
+			});
+			setLoading(true);
 			try {
 				const molSerializer = new MolSerializer();
 				const struct = molSerializer.deserialize(mol);
@@ -79,12 +86,24 @@ const MolSVG = memo((props: Props) => {
 			} catch (e) {
 				setErrorState(true);
 				console.error("渲染分子SVG错误:", e);
+			} finally {
+				setLoading(false);
 			}
 		}
 	};
 	return (
 		<div style={{ width, height, ...style }} className={["mol-svg-container", rootClass].join(" ")}>
-			{errorState ? <>{error}</> : <div className={["mol-svg-box", boxClass].join(" ")} ref={moleculeRef}></div>}
+			{errorState ? (
+				<>{error}</>
+			) : (
+				<div className={["mol-svg-box", boxClass].join(" ")} ref={moleculeRef}>
+					{loading && (
+						<div className="mol-svg-loading">
+							<Spinner />
+						</div>
+					)}
+				</div>
+			)}
 		</div>
 	);
 });
