@@ -14,8 +14,6 @@ type renderProps = {
 };
 
 export class RenderStruct {
-	static renderCache: Map<string, string> = new Map();
-
 	static prepareStruct(struct: Struct) {
 		if (struct.sgroups.size > 0) {
 			const newStruct = struct.clone();
@@ -27,12 +25,6 @@ export class RenderStruct {
 
 	static render({ el, struct, options = {}, highlight }: renderProps) {
 		if (el && struct) {
-			const { cachePrefix = "", needCache = true } = options;
-			const cacheKey = `${cachePrefix}${struct.name}`;
-			if (this.renderCache.has(cacheKey) && needCache) {
-				el.innerHTML = this.renderCache.get(cacheKey)!;
-				return;
-			}
 			const preparedStruct = this.prepareStruct(struct);
 			preparedStruct.initHalfBonds();
 			preparedStruct.initNeighbors();
@@ -60,9 +52,6 @@ export class RenderStruct {
 				});
 				fromHighlightCreate(rnd.ctab, [{ atoms: nAtoms, bonds: nBonds, color }]);
 				rnd.update();
-			}
-			if (needCache) {
-				this.renderCache.set(cacheKey, rnd.clientArea.innerHTML);
 			}
 		}
 	}
