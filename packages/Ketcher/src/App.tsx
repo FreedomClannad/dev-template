@@ -1,5 +1,6 @@
 import "./App.css";
-import { MolSVG } from "../lib/main";
+// import { MolSVG } from "../lib/main";
+import { MolIMG } from "@/MolIMG";
 import { useState } from "react";
 function App() {
 	const [textarea, setTextarea] = useState<string>("");
@@ -49,7 +50,7 @@ M  END`);
 			></textarea>
 			<button onClick={handleClick}>生成</button>
 			<div>
-				<MolSVG mol={mol} height={200} width={200}></MolSVG>
+				<MolIMG mol={mol} height={200} width={200}></MolIMG>
 			</div>
 		</>
 	);

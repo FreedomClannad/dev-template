@@ -8,6 +8,11 @@ export default defineConfig({
 		"process.env": process.env,
 		global: {}
 	},
+	resolve: {
+		alias: {
+			"@": resolve(__dirname, "./lib")
+		}
+	},
 	plugins: [react(), dts({ include: ["lib"], tsconfigPath: "./tsconfig.build.json" })],
 	build: {
 		copyPublicDir: false,

@@ -1,9 +1,15 @@
 import { MolSerializer, LogSettings } from "ketcher-core";
-import { useEffect, useRef, memo, ReactNode, useState, CSSProperties } from "react";
-import { HighlightMol, RenderStruct } from "./renderStruct";
+import { useEffect, useRef, memo, ReactNode, useState, CSSProperties, MouseEvent } from "react";
+import { HighlightMol, RenderStruct } from "@/MolSVG/renderStruct";
 import { v4 as uuid4 } from "uuid";
-import Spinner from "../Loading/Spinner";
+import Spinner from "@/Loading/Spinner";
 import "./styles.css";
+import { ZoomInOutlined } from "@ant-design/icons";
+import Image from "rc-image";
+import "rc-image/assets/index.css";
+import { svgTransformUrl } from "@/utils";
+import { defaultIcons } from "./common";
+
 // 编写JSDoc
 /**
  * @description 生成SVG图片
@@ -16,7 +22,7 @@ import "./styles.css";
  * @param {number} [width] - width
  * @param {number} [height] - height
  * */
-export type MolSVGProps = {
+export type MolIMGProps = {
 	mol: string;
 	style?: CSSProperties;
 	rootClass?: string;
@@ -28,6 +34,7 @@ export type MolSVGProps = {
 	options?: any;
 	highlight?: HighlightMol;
 	error?: ReactNode;
+	preview?: boolean | { minScale: number; maxScale: number };
 };
 
 const Error = () => {
@@ -41,7 +48,7 @@ const Error = () => {
  * @param {MolSVGProps} props - Props
  * @returns {ReactNode} SVG图片
  * */
-const MolSVG = memo((props: MolSVGProps) => {
+const MolIMG = memo((props: MolIMGProps) => {
 	const {
 		mol,
 		id = uuid4(),
@@ -52,12 +59,17 @@ const MolSVG = memo((props: MolSVGProps) => {
 		height = 400,
 		options,
 		highlight,
-		error = <Error />
+		error = <Error />,
+		preview = true
 	} = props;
 	const moleculeRef = useRef<HTMLDivElement>(null);
 
 	const [errorState, setErrorState] = useState<boolean>(false);
 	const [loading, setLoading] = useState<boolean>(false);
+	const [previewSrc, setPreviewSrc] = useState<string>("");
+	const [previewVisible, setPreviewVisible] = useState<boolean>(false);
+
+	const { minScale, maxScale } = typeof preview === "object" ? preview : { minScale: 1, maxScale: 50 };
 
 	useEffect(() => {
 		// 新版加了日志, 源码是调用window上属性，为了防止和Kethcer的Editer的Window冲突，所以这里针对window的ketcher进行判断
@@ -73,13 +85,28 @@ const MolSVG = memo((props: MolSVGProps) => {
 		renderSVG();
 	}, [mol, width, height]);
 
+	const handleOpenPreview = (e: MouseEvent) => {
+		if (moleculeRef && moleculeRef.current) {
+			const clientArea = moleculeRef.current;
+			const url = svgTransformUrl(clientArea);
+			if (url) {
+				setPreviewSrc(url);
+				setPreviewVisible(true);
+			}
+		}
+		e.stopPropagation();
+	};
+
 	const renderSVG = () => {
 		if (moleculeRef && moleculeRef.current && mol) {
 			const clientArea = moleculeRef.current;
 			const svgElementList = clientArea.querySelectorAll("svg");
 			const svgList = Array.from(svgElementList);
+			console.log(svgList);
 			svgList.map(el => {
-				clientArea.removeChild(el);
+				if (el.parentElement === clientArea) {
+					clientArea.removeChild(el);
+				}
 			});
 			setLoading(true);
 			try {
@@ -110,20 +137,41 @@ const MolSVG = memo((props: MolSVGProps) => {
 		}
 	};
 	return (
-		<div style={{ width, height, ...style }} className={["mol-svg-container", rootClass].join(" ")}>
+		<div style={{ width, height, ...style }} className={["mol-img-container", rootClass].join(" ")}>
 			{errorState ? (
 				<>{error}</>
 			) : (
-				<div className={["mol-svg-box", boxClass].join(" ")} ref={moleculeRef}>
+				<div className={["mol-img-box", boxClass].join(" ")} ref={moleculeRef}>
 					{loading && (
-						<div className="mol-svg-loading">
+						<div className="mol-img-loading">
 							<Spinner />
 						</div>
 					)}
+					{preview && mol && (
+						<button className="mol-img-preview-button" onClick={handleOpenPreview}>
+							<ZoomInOutlined />
+						</button>
+					)}
+				</div>
+			)}
+			{preview && mol && (
+				<div onClick={(e: MouseEvent) => e.stopPropagation()} className="mol-img-preview-wrapper">
+					<Image
+						preview={{
+							icons: defaultIcons,
+							src: previewSrc,
+							visible: previewVisible,
+							minScale,
+							maxScale,
+							onVisibleChange: visible => {
+								setPreviewVisible(visible);
+							}
+						}}
+					></Image>
 				</div>
 			)}
 		</div>
 	);
 });
 
-export { MolSVG };
+export { MolIMG };
